@@ -13,9 +13,9 @@ struct WelcomeView: View {
 
             // App icon and title
             VStack(spacing: 12) {
-                Image(systemName: "doc.text")
-                    .font(.system(size: 56, weight: .thin))
-                    .foregroundStyle(.tint)
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .frame(width: 80, height: 80)
 
                 Text("MacMark")
                     .font(.system(size: 28, weight: .semibold, design: .rounded))
