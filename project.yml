@@ -1,0 +1,67 @@
+name: MacMark
+options:
+  bundleIdPrefix: co.distilledinnovation
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    DEVELOPMENT_TEAM: ""  # Set your team ID here
+
+packages:
+  swift-markdown:
+    url: https://github.com/apple/swift-markdown
+    from: "0.4.0"
+
+targets:
+  MacMark:
+    type: application
+    platform: macOS
+    sources:
+      - path: MacMark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.distilledinnovation.MacMark
+        PRODUCT_NAME: MacMark
+        INFOPLIST_FILE: MacMark/Info.plist
+        CODE_SIGN_ENTITLEMENTS: MacMark/MacMark.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+      - target: MacMarkQuickLook
+        embed: true
+
+  MacMarkQuickLook:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: MacMarkQuickLook
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.distilledinnovation.MacMark.QuickLook
+        PRODUCT_NAME: MacMarkQuickLook
+        INFOPLIST_FILE: MacMarkQuickLook/Info.plist
+        CODE_SIGN_ENTITLEMENTS: MacMarkQuickLook/MacMarkQuickLook.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+
+schemes:
+  MacMark:
+    build:
+      targets:
+        MacMark: all
+        MacMarkQuickLook: all
+    run:
+      config: Debug
+    archive:
+      config: Release
